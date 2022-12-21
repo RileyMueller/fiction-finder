@@ -1,16 +1,11 @@
 /* vercel next.js serverless function that retrieves `fictions` table information from supabase */
-import {supabase} from '../../utils/initSupabase';
+import { supabase } from "../../utils/initSupabase";
 
-export default function handler (req, res) {
-    const {query} = req
-    const {id} = query
-    supabase.from('fictions')
-    .select('*')
-    .where({id})
-    .then(data => {
-        res.status(200).json(data)
-    })
-    .catch(error => {
-        res.status(500).json({error})
-    })
+export default async function handler(req, res) {
+    const { data, error } = await supabase.from("fictions").select('title, author, url, embedding_id');
+    if (data) {
+        res.status(200).json(data);
+    } else {
+        res.status(500).json(error);
+    }
 }
