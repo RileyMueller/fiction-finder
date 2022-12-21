@@ -19,17 +19,22 @@ async function fetch_vector(id) {
 
 async function query_pinecone(vector) {
     // Content-Length is the length of the body json (every character)
-    const body = {"queries":[{"values":vector}],"topK":6,"includeMetadata":false,"includeValues":false}
+    //const body = {"queries":[{"values":vector}],"topK":6,"includeMetadata":false,"includeValues":false}
+    const body = {"vector":vector,"topK":6,"includeMetadata":false,"includeValues":false};
 
     const body_str = JSON.stringify(body);
+
+    const url = `https://${process.env.NEXT_PUBLIC_PINECONE_INDEX}-${process.env.NEXT_PUBLIC_PINECONE_PROJECT}.svc.${process.env.NEXT_PUBLIC_PINECONE_ENV}.pinecone.io/query`
+
+    console.log(url);
          
     const response = await fetch(
-        `https://${process.env.NEXT_PUBLIC_PINECONE_INDEX}.svc.${process.env.NEXT_PUBLIC_PINECONE_ENV}.pinecone.io/query`,
+        url,
         {
             method: "POST",
             headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json",
+                "content-type": "application/json",
+                "accept": "application/json",
                 "Api-Key": process.env.NEXT_PUBLIC_PINECONE_API_KEY,
                 "Content-Length": body_str.length
             },
