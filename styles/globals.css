@@ -1,4 +1,31 @@
 :root {
+
+  --light-light: #d2f4f6,
+  --light-white: #ffffff,
+  --light-dark: #0c0300,
+  --light-primary: #2d4b57,
+  --light-secondary: #3d7285,
+  --light-info: #4da5c2,
+  --light-accent1: #43e8e9,
+  --light-accent2: #005d59,
+  --light-accent3: #07151c,
+  --light-success: #009f50,
+  --light-warning: #e6c700,
+  --light-danger: #f2001d,
+
+  --dark-light: #1a1f1d,
+  --dark-white: #ffffff,
+  --dark-dark: #131361,
+  --dark-primary: #1f2d67,
+  --dark-secondary: #6169d2,
+  --dark-info: #828def,
+  --dark-accent1: #1babd1,
+  --dark-accent2: #4c339e,
+  --dark-accent3: #a72359,
+  --dark-success: #099e5c,
+  --dark-warning: #e0ca09,
+  --dark-danger: #ee1b03,
+
   --max-width: 1100px;
   --border-radius: 12px;
   --font-mono: ui-monospace, Menlo, Monaco, 'Cascadia Mono', 'Segoe UI Mono',
@@ -86,7 +113,7 @@ body {
 }
 
 body {
-  color: rbg(--foreground-rgb);
+  color: rgb(--foreground-rgb);
   background: linear-gradient(
       to bottom,
       transparent,

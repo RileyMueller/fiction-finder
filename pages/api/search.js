@@ -2,7 +2,7 @@ import { supabase } from "../../utils/initSupabase";
 
 async function fetch_vector(id) {
     const response = await fetch(
-        `https://${process.env.NEXT_PUBLIC_PINECONE_INDEX}.svc.${process.env.NEXT_PUBLIC_PINECONE_ENV}.pinecone.io/vectors/fetch?ids=${id}`,
+        `https://${process.env.NEXT_PUBLIC_PINECONE_INDEX}-${process.env.NEXT_PUBLIC_PINECONE_PROJECT}.svc.${process.env.NEXT_PUBLIC_PINECONE_ENV}.pinecone.io/vectors/fetch?ids=${id}`,
         {
             method: "GET",
             headers: {
@@ -25,9 +25,7 @@ async function query_pinecone(vector) {
     const body_str = JSON.stringify(body);
 
     const url = `https://${process.env.NEXT_PUBLIC_PINECONE_INDEX}-${process.env.NEXT_PUBLIC_PINECONE_PROJECT}.svc.${process.env.NEXT_PUBLIC_PINECONE_ENV}.pinecone.io/query`
-
-    console.log(url);
-         
+     
     const response = await fetch(
         url,
         {
@@ -41,10 +39,7 @@ async function query_pinecone(vector) {
             body: body_str
         }
     );
-    console.log(`Response status: ${response.statusText}`);
-    response.headers.forEach((key, value) => {
-        console.log(`${value}\t${key}`);
-    });
+    
     return await response.json();
 }
 
@@ -70,8 +65,12 @@ export default async function handler(req, res) {
         var ids_string = "(";
 
         // The first element is the vector we searches on, so remove it.
-        const matches = json.results[0].matches.slice(1);
-        
+        let matches = json.matches;
+        if (json.matches[0].score === 1)
+            matches = matches.slice(1);
+        else
+            matches = matches.slice(0,-1)
+
         matches.forEach((match)=>{
             ids_string += match.id + ",";
         });
