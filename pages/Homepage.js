@@ -24,6 +24,7 @@ const Homepage = ({totalPages}) => {
         <div>
             <FictionList fictions={fictions}/>
             <div>
+                <p>Page {page+1} of {totalPages}</p>
                 <button disabled={page === 0} onClick={() => setPage(page - 1)}>
                     Prev
                 </button>
