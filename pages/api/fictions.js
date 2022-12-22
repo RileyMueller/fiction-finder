@@ -6,7 +6,7 @@ import { supabase } from "../../utils/initSupabase";
  */
 export default async function handler(req, res) {
     const page = req.query.page || 0; // get the page number from the query string, or use 0 if not provided
-    const elementsPerPage = 20; // number of elements to retrieve per page
+    const elementsPerPage = process.env.ELEMENTS_PER_PAGE; // number of elements to retrieve per page
     const offset = page * elementsPerPage; // calculate the index to start retrieving elements from
 
     const { data, error } = await supabase.from("fictions")

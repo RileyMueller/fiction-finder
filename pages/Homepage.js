@@ -1,84 +1,61 @@
 import React from "react";
-import Fiction from "./Fiction";
+import FictionList from "./FictionList";
 import { useState, useEffect } from "react";
 
-// gets called at build time and lets you pass fetched data to the page's props on pre-render
-export async function getStaticProps() {
-    // {params}
-    console.log('static props here');
-    const page = 0;
-    // make a request to the fictions serverless function
-    const res = await fetch(`/api/fictions?page=${page}`);
-    const data = await res.json();
-
-    console.log(`Data: ${JSON.stringify(data)}`);
-
-    // send the data as props to the component
-    return { props: { data: JSON.stringify(data) } };
-    //end
-    /*
-    // params will contain the page number if provided in the URL
-    //const page = params ? params.page : 0;
-    const page = 0;
-    // make a request to the fictions serverless function
-    const res = await fetch(`api/fictions?page=${page}`);
-    const data = await res.json();
-
-    console.log(`Data: ${JSON.stringify(data)}`);
-
-    // send the data as props to the component
-    return {
-        props: {
-            fictions: data,
-            page: page,
-            totalPages: 100,
-            handlePageChange: ()=>{console.log('Change the page.')}
-        },
-    }; */
-}
-
-async function getFictions() {
-    const page = 0;
-    // make a request to the fictions serverless function
-    const res = await fetch(`/api/fictions?page=${page}`);
-    const data = await res.json();
-
-    console.log(`Data: ${JSON.stringify(data)}`);
-
-    // send the data as props to the component
-    return JSON.stringify(data);
-}
-
-const Homepage = (props) => {
-    //const { fictions, page, totalPages, handlePageChange } = props;
-    const {data} = props;
-    const [text, setText] = useState("state text");
+/**
+ * Displays the current page of stored fictions
+ * @param {*} props
+ * @returns
+ */
+const Homepage = ({totalPages}) => {
+    const [page, setPage] = useState(0);
+    const [fictions, setFictions] = useState([]);
 
     useEffect(() => {
-        getFictions().then((data) => {
-            setText(data);
+        getFictions(page).then((fictions) => {
+            if (!fictions) {
+                throw new Error("getFictions returned no fictions");
+            }
+            setFictions(fictions);
         });
-    }, []);
+    }, [page]); //updates on page change
 
     return (
         <div>
-            {/* {fictions.map((fiction) => (
-        <Fiction
-          key={fiction.id}
-          title={fiction.title}
-          author={fiction.author}
-          url={fiction.url}
-          onFindSimilar={() => handleFindSimilar(fiction.embeddingId)}
-        />
-      ))} */}
-            <div>{text?.slice(0, 30)}</div>
+            <FictionList fictions={fictions}/>
             <div>
-                {data}
-                {/* {page > 1 && <button onClick={() => handlePageChange(page - 1)}>Prev</button>}
-        {page < totalPages && <button onClick={() => handlePageChange(page + 1)}>Next</button>} */}
+                <button disabled={page === 0} onClick={() => setPage(page - 1)}>
+                    Prev
+                </button>
+
+                <button
+                    disabled={page >= totalPages}
+                    onClick={() => setPage(page + 1)}
+                >
+                    Next
+                </button>
             </div>
         </div>
     );
 };
+
+
+async function getFictions(page) {
+    // params will contain the page number if provided in the URL
+    if (!page && page != 0) {
+        throw new Error(`getFictions helper needs a page number`);
+    }
+    // make a request to the fictions serverless function
+    const res = await fetch(`api/fictions?page=${page}`);
+
+    if (!res) throw new Error("Failed fetch to api/fictions");
+
+    const data = await res.json();
+
+    console.log(`Data: ${JSON.stringify(data)}`);
+
+    // send the data as props to the component
+    return data;
+}
 
 export default Homepage;
