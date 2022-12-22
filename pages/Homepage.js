@@ -8,7 +8,7 @@ export async function getStaticProps() {
     console.log('static props here');
     const page = 0;
     // make a request to the fictions serverless function
-    const res = await fetch(`api/fictions?page=${page}`);
+    const res = await fetch(`/api/fictions?page=${page}`);
     const data = await res.json();
 
     console.log(`Data: ${JSON.stringify(data)}`);
@@ -40,7 +40,7 @@ export async function getStaticProps() {
 async function getFictions() {
     const page = 0;
     // make a request to the fictions serverless function
-    const res = await fetch(`api/fictions?page=${page}`);
+    const res = await fetch(`/api/fictions?page=${page}`);
     const data = await res.json();
 
     console.log(`Data: ${JSON.stringify(data)}`);
