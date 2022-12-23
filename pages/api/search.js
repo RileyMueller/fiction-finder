@@ -14,7 +14,7 @@ async function fetch_vector(id) {
     );
     const data = await response.json();
     
-    return data['vectors']['0']['values'];
+    return data['vectors'][id.toString()]['values'];
 }
 
 async function query_pinecone(vector) {
@@ -43,10 +43,10 @@ async function query_pinecone(vector) {
     return await response.json();
 }
 
-async function join_fictions(ids_string){
+async function join_fictions(embedding_id){
     const { data, error } = await supabase.from("fictions")
         .select('title, author, url, embedding_id')
-        .filter('embedding_id', 'in', ids_string);
+        .filter('embedding_id', 'in', embedding_id);
     if (data) {
         return data;
     } else {
@@ -56,7 +56,20 @@ async function join_fictions(ids_string){
 
 export default async function handler(req, res) {
     try {
-        const embedding_id = req.query.embedding_id ?  req.query.embedding_id : 0;
+        let {embedding_id} = await req.query;
+
+        if (embedding_id === 'undefined'){
+            console.log('its undefined');
+        }
+
+        console.log(`Embedding_id ${embedding_id}`);
+
+        if (!embedding_id && embedding_id != 0){
+            console.log('invalid embedding_id');
+            embedding_id = 0;
+        }
+
+
         // first retrieve the vector for the embedding id we want
         const vector = await fetch_vector(embedding_id);
         

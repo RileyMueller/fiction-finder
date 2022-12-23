@@ -2,17 +2,14 @@ import React from 'react';
 import Link from 'next/link';
 
 const Fiction = (props) => {
-  const { title, author, url, embedding_id } = props;
+  const { title, author, url, embedding_id, score } = props;
 
   return (
     <div>
-      <h3>{title}</h3>
+      <h3><a href={url}>{title}</a></h3>
       <p>by {author}</p>
-      <a href={url}>Read more</a>
-      <Link href={{
-        pathname: `/similiar/${encodeURIComponent(title)}`,
-        query: {id: embedding_id}
-      }}>Find Similar</Link>
+      {score && <p>Score: {score}</p>}
+      {!score && <Link href={`/similiar?id=${embedding_id}`}>Find Similar</Link>}
     </div>
   );
 };

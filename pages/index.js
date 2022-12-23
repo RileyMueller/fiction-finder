@@ -5,6 +5,7 @@ import styles from "../styles/Home.module.css";
 import Homepage from "./Homepage";
 import Dashboard from "./Dashboard";
 import {createClient} from '@supabase/supabase-js';
+import { useRouter } from "next/router";
 
 const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -12,10 +13,11 @@ const supabase = createClient(
 )
 
 export async function getStaticProps(context) {
-    const { data, count } = supabase.from("fictions").select("*", { count: "exact" });
+    const { data, error } = await supabase.rpc('fictions_count');
 
-    const num_pages = Math.ceil(count / process.env.ELEMENTS_PER_PAGE);
-    console.log(`Number of pages: ${num_pages}`);
+    if (error) throw new Error(error);
+    
+    const num_pages = Math.ceil(data / process.env.ELEMENTS_PER_PAGE);
 
     return {
         props: { totalPages: num_pages ? num_pages : 100 }, // will be passed to the page component as props
@@ -23,6 +25,10 @@ export async function getStaticProps(context) {
 }
 
 export default function Home({ totalPages }) {
+
+    const router = useRouter();
+    const page = router.query.page ? Number(router.query.page) : 1;
+
     return (
         <>
             <Head>
@@ -39,7 +45,7 @@ export default function Home({ totalPages }) {
             </Head>
             <main className={styles.main}>
                 <Dashboard />
-                <Homepage totalPages={totalPages} />
+                <Homepage page={page} totalPages={totalPages} />
             </main>
         </>
     );

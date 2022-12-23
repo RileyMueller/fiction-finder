@@ -1,14 +1,14 @@
 import React from "react";
 import FictionList from "./FictionList";
 import { useState, useEffect } from "react";
+import Link from "next/link";
 
 /**
  * Displays the current page of stored fictions
  * @param {*} props
  * @returns
  */
-const Homepage = ({totalPages}) => {
-    const [page, setPage] = useState(0);
+const Homepage = ({ page, totalPages }) => {
     const [fictions, setFictions] = useState([]);
 
     useEffect(() => {
@@ -22,28 +22,26 @@ const Homepage = ({totalPages}) => {
 
     return (
         <div>
-            <FictionList fictions={fictions}/>
+            <FictionList fictions={fictions} />
             <div>
-                <p>Page {page+1} of {totalPages}</p>
-                <button disabled={page === 0} onClick={() => setPage(page - 1)}>
-                    Prev
+                <p>
+                    Page {page} of {totalPages}
+                </p>
+                <button disabled={page === 1}>
+                    <Link href={`/?page=${page - 1}`}>Prev</Link>
                 </button>
 
-                <button
-                    disabled={page >= totalPages}
-                    onClick={() => setPage(page + 1)}
-                >
-                    Next
+                <button disabled={page >= totalPages}>
+                    <Link href={`/?page=${page + 1}`}>Next</Link>
                 </button>
             </div>
         </div>
     );
 };
 
-
 async function getFictions(page) {
     // params will contain the page number if provided in the URL
-    if (!page && page != 0) {
+    if (!page) {
         throw new Error(`getFictions helper needs a page number`);
     }
     // make a request to the fictions serverless function
@@ -52,8 +50,6 @@ async function getFictions(page) {
     if (!res) throw new Error("Failed fetch to api/fictions");
 
     const data = await res.json();
-
-    console.log(`Data: ${JSON.stringify(data)}`);
 
     // send the data as props to the component
     return data;
