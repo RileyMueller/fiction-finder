@@ -59,7 +59,8 @@ export default async function handler(req, res) {
         let {embedding_id} = await req.query;
 
         if (embedding_id === 'undefined'){
-            console.log('its undefined');
+            res.status(200).json({});
+            return;
         }
 
         console.log(`Embedding_id ${embedding_id}`);

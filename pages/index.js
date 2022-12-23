@@ -1,11 +1,9 @@
-import Head from "next/head";
-import Image from "next/image";
-import { Inter } from "@next/font/google";
 import styles from "../styles/Home.module.css";
 import Homepage from "./Homepage";
 import Dashboard from "./Dashboard";
 import {createClient} from '@supabase/supabase-js';
 import { useRouter } from "next/router";
+import Header from "./Header";
 
 const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -31,18 +29,7 @@ export default function Home({ totalPages }) {
 
     return (
         <>
-            <Head>
-                <title>Fiction Finder</title>
-                <meta
-                    name="description"
-                    content="Search for fictions by prompt or similiarity to other fictions"
-                />
-                <meta
-                    name="viewport"
-                    content="width=device-width, initial-scale=1"
-                />
-                <link rel="icon" href="/favicon.ico" />
-            </Head>
+            <Header/>
             <main className={styles.main}>
                 <Dashboard />
                 <Homepage page={page} totalPages={totalPages} />

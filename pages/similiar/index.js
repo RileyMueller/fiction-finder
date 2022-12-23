@@ -1,7 +1,10 @@
 // id stands for embedding_id
+import styles from "../../styles/Home.module.css";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import Fiction from "../Fiction";
+import Header from "../Header";
+import Dashboard from "../Dashboard";
 
 const SimilarList = () => {
     const router = useRouter();
@@ -16,7 +19,11 @@ const SimilarList = () => {
 
 
     return (
-        <ul>
+        <>
+        <Header/>
+        <main className={styles.main}>
+            <Dashboard />
+            <ul>
             {similiar.map((fiction) => (
                 <li key={fiction.embedding_id}>
                     <Fiction
@@ -28,6 +35,8 @@ const SimilarList = () => {
                 </li>
             ))}
         </ul>
+        </main>
+    </>
     );
 };
 
