@@ -3,7 +3,7 @@ import Fiction from "./Fiction";
 const FictionList = ({ fictions }) => {
     return (
         <ul>
-            {fictions.map((fiction) => (
+            {fictions?.map((fiction) => (
                 <li key={fiction.embedding_id}>
                     <Fiction
                     title={fiction.title}

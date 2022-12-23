@@ -24,7 +24,7 @@ const SimilarList = () => {
         <main className={styles.main}>
             <Dashboard />
             <ul>
-            {similiar.map((fiction) => (
+            {similiar?.map((fiction) => (
                 <li key={fiction.embedding_id}>
                     <Fiction
                         title={fiction.title}
