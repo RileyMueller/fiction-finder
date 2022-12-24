@@ -11,6 +11,7 @@ import { debounce } from "lodash";
  */
 const Homepage = ({ page, totalPages }) => {
     const [fictions, setFictions] = useState([]);
+    const [searchterm, setSearchTerm] = useState("");
 
     useEffect(() => {
         getFictions(page).then((fictions) => {
@@ -21,16 +22,24 @@ const Homepage = ({ page, totalPages }) => {
         });
     }, [page]); //updates on page change
 
+    async function search(search_term) {
+        if (!search_term) return;
+
+        const res = await fetch(`api/search?term=${search_term}`);
+
+        if (!res) console.log("Failed fetch to api/search");
+
+        const data = await res.json();
+
+        if (data === {}) return;
+
+        setFictions(data);
+    }
+
     const PageDisplay = () => {
         return (
-            <>
+            
                 <div className="pagination">
-                    <input
-                        className="search-input"
-                        type="text"
-                        placeholder="Search..."
-                        onChange={(event) => debounce(() => search(event.target.value, setFictions), 1000 )}
-                    />
                     <p className="page-info">
                         Page {page} of {totalPages}
                     </p>
@@ -49,31 +58,30 @@ const Homepage = ({ page, totalPages }) => {
                         Next
                     </button>
                 </div>
-            </>
         );
-    }    
+    };
 
     return (
         <div className="homepage">
-            <PageDisplay/>
+            <div className="search-container">
+                    <input
+                        type="text"
+                        className="search-input"
+                        onChange={(event) => setSearchTerm(event.target.value)}
+                    />
+                    <button
+                        className="search-button"
+                        onClick={() => search(searchterm)}
+                    >
+                        Search
+                    </button>
+                </div>
+            <PageDisplay />
             <FictionList fictions={fictions} />
-            <PageDisplay/>
+            <PageDisplay />
         </div>
     );
 };
-
-let old_search_term = '';
-async function search(search_term, setFictions){
-    if (!search_term || old_search_term === search_term) return;
-
-    const res = await fetch(`api/search?search_term=${search_term}`);
-
-    if (!res) console.log("Failed fetch to api/search");
-
-    const data = await res.json();
-
-    setFictions(data);
-}
 
 async function getFictions(page) {
     // params will contain the page number if provided in the URL
