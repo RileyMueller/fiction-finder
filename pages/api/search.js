@@ -63,8 +63,6 @@ export default async function handler(req, res) {
             return;
         }
 
-        console.log(`Embedding_id ${embedding_id}`);
-
         if (!embedding_id && embedding_id != 0){
             console.log('invalid embedding_id');
             embedding_id = 0;

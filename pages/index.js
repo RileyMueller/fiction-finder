@@ -1,20 +1,17 @@
-import styles from "../styles/Home.module.css";
-import Homepage from "./Homepage";
-import Dashboard from "./Dashboard";
-import {createClient} from '@supabase/supabase-js';
+import { createClient } from "@supabase/supabase-js";
 import { useRouter } from "next/router";
-import Header from "./Header";
+import Homepage from "./Homepage";
 
 const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-)
+);
 
 export async function getStaticProps(context) {
-    const { data, error } = await supabase.rpc('fictions_count');
+    const { data, error } = await supabase.rpc("fictions_count");
 
     if (error) throw new Error(error);
-    
+
     const num_pages = Math.ceil(data / process.env.ELEMENTS_PER_PAGE);
 
     return {
@@ -23,17 +20,12 @@ export async function getStaticProps(context) {
 }
 
 export default function Home({ totalPages }) {
-
     const router = useRouter();
     const page = router.query.page ? Number(router.query.page) : 1;
 
     return (
         <>
-            <Header/>
-            <main className={styles.main}>
-                <Dashboard />
-                <Homepage page={page} totalPages={totalPages} />
-            </main>
+            <Homepage page={page} totalPages={totalPages} />
         </>
     );
 }

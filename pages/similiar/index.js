@@ -1,15 +1,13 @@
 // id stands for embedding_id
-import styles from "../../styles/Home.module.css";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import Fiction from "../Fiction";
-import Header from "../Header";
-import Dashboard from "../Dashboard";
+import FictionList from "../FictionList";
 
 const SimilarList = () => {
     const router = useRouter();
     const { id } = router.query;
-    const [similiar, setSimiliar] = useState([]);
+    const [similiar, setSimiliar] = useState([{embedding_id: 0, title: 'Loading...'}]);
 
     useEffect(() => {
         getSimiliar(id).then((data) => {
@@ -17,26 +15,12 @@ const SimilarList = () => {
         });
     }, [id]);
 
-
     return (
         <>
-        <Header/>
-        <main className={styles.main}>
-            <Dashboard />
-            <ul>
-            {similiar.map((fiction) => (
-                <li key={fiction.embedding_id}>
-                    <Fiction
-                        title={fiction.title}
-                        author={fiction.author}
-                        url={fiction.url}
-                        score={(Number(fiction.score) * 100).toFixed(2)}
-                    />
-                </li>
-            ))}
-        </ul>
-        </main>
-    </>
+            <div>
+                <FictionList fictions={similiar} />
+            </div>
+        </>
     );
 };
 
@@ -46,7 +30,7 @@ async function getSimiliar(embedding_id) {
 
     if (!res) throw new Error("Failed fetch to api/fictions");
     console.log(res.statusText);
-    
+
     const data = await res.json();
 
     if (data.error) {

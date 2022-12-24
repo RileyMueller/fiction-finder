@@ -1,7 +1,7 @@
 import React from "react";
 import FictionList from "./FictionList";
 import { useState, useEffect } from "react";
-import Link from "next/link";
+import Router from "next/router";
 
 /**
  * Displays the current page of stored fictions
@@ -20,21 +20,35 @@ const Homepage = ({ page, totalPages }) => {
         });
     }, [page]); //updates on page change
 
-    return (
-        <div>
-            <FictionList fictions={fictions} />
-            <div>
-                <p>
-                    Page {page} of {totalPages}
-                </p>
-                <button disabled={page === 1}>
-                    <Link href={`/?page=${page - 1}`}>Prev</Link>
-                </button>
+    const PageDisplay = () => {
+        return (
+            <div className="pagination">
+                    <p className="page-info">
+                        Page {page} of {totalPages}
+                    </p>
+                    <button
+                        className="prev-button"
+                        disabled={page === 1}
+                        onClick={() => Router.push(`/?page=${page - 1}`)}
+                    >
+                        Prev
+                    </button>
+                    <button
+                        className="next-button"
+                        disabled={page >= totalPages}
+                        onClick={() => Router.push(`/?page=${page + 1}`)}
+                    >
+                        Next
+                    </button>
+                </div>
+        )
+    }    
 
-                <button disabled={page >= totalPages}>
-                    <Link href={`/?page=${page + 1}`}>Next</Link>
-                </button>
-            </div>
+    return (
+        <div className="homepage">
+            <PageDisplay/>
+            <FictionList fictions={fictions} />
+            <PageDisplay/>
         </div>
     );
 };
