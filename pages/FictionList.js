@@ -4,7 +4,7 @@ const FictionList = ({ fictions }) => {
     return (
         <div className="fiction-list">
         <div className="grid">
-          {fictions.map && fictions?.map((fiction) => (
+          {(fictions && fictions.map) && fictions?.map((fiction) => (
             <div key={fiction.embedding_id} className="grid-item">
               <Fiction
                 title={fiction.title}
