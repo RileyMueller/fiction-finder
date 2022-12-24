@@ -1,95 +1,259 @@
 :root {
 
-  --light-light: #d2f4f6,
-  --light-white: #ffffff,
-  --light-dark: #0c0300,
-  --light-primary: #2d4b57,
-  --light-secondary: #3d7285,
-  --light-info: #4da5c2,
-  --light-accent1: #43e8e9,
-  --light-accent2: #005d59,
-  --light-accent3: #07151c,
-  --light-success: #009f50,
-  --light-warning: #e6c700,
-  --light-danger: #f2001d,
+  --light-primary: #fefcfc;
+  --light-secondary: #453afa;
+  --light-accent1: #38558f;
+  --light-accent2: #f54d00;
 
-  --dark-light: #1a1f1d,
-  --dark-white: #ffffff,
-  --dark-dark: #131361,
-  --dark-primary: #1f2d67,
-  --dark-secondary: #6169d2,
-  --dark-info: #828def,
-  --dark-accent1: #1babd1,
-  --dark-accent2: #4c339e,
-  --dark-accent3: #a72359,
-  --dark-success: #099e5c,
-  --dark-warning: #e0ca09,
-  --dark-danger: #ee1b03,
+
+  --dark-primary: #27303b;
+  --dark-secondary: #1de1a4;
+  --dark-accent1: #ed761b;
+  --dark-accent2: #cf005d;
 
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-
-    --primary-glow: radial-gradient(rgba(1, 65, 255, 0.4), rgba(1, 65, 255, 0));
-    --secondary-glow: linear-gradient(
-      to bottom right,
-      rgba(1, 65, 255, 0),
-      rgba(1, 65, 255, 0),
-      rgba(1, 65, 255, 0.3)
-    );
-
-    --tile-start-rgb: 2, 13, 46;
-    --tile-end-rgb: 2, 5, 19;
-    --tile-border: conic-gradient(
-      #ffffff80,
-      #ffffff40,
-      #ffffff30,
-      #ffffff20,
-      #ffffff10,
-      #ffffff10,
-      #ffffff80
-    );
-
-    --callout-rgb: 20, 20, 20;
-    --callout-border-rgb: 108, 108, 108;
-    --card-rgb: 100, 100, 100;
-    --card-border-rgb: 200, 200, 200;
-  }
+body.light {
+  --primary: var(--light-primary);
+  --secondary: var(--light-secondary);
+  --accent1: var(--light-accent1);
+  --accent2: var(--light-accent2);
 }
-
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
-
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
+body.dark {
+  --primary: var(--dark-primary);
+  --secondary: var(--dark-secondary);
+  --accent1: var(--dark-accent1);
+  --accent2: var(--dark-accent2);
 }
 
 body {
-  color: rgb(--foreground-rgb);
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  background: var(--primary);
 }
 
-a {
-  color: inherit;
+.divider {
+  border: 0;
+  height: 1px;
+  background-color: var(--secondary);
+}
+
+/* Dashboard component */
+.dashboard {
+  margin: 1rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--primary);
+  color: var(--secondary);
+  padding: 0 2rem;
+}
+
+.dashboard-items {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-end;
+}
+
+.site-title {
+  margin: 0 1rem;
+  margin-right: 1rem;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.dashboard-links {
+  display: flex;
+}
+
+/* Links in the Dashboard component */
+.dashboard-link {
+  font-size: 1.25rem;
+  margin: 0 0.5rem;
+  color: var(--secondary);
   text-decoration: none;
+  transition: color 0.2s ease-in-out;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+.dashboard-link:hover,
+.dashboard-link:focus {
+  color: var(--accent1);
+}
+
+.dashboard-link:active {
+  color: var(--accent2);
+}
+
+.dashboard-toggle{
+  margin: 0 1rem;
+  margin-right: 1rem;
+}
+
+.theme-toggle {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  transition: color 0.2s ease-in-out;
+}
+
+.toggle-icon:hover,
+.toggle-icon:focus {
+  fill: var(--accent1);
+}
+
+.toggle-icon:active {
+  fill: var(--accent2);
+}
+
+.toggle-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  fill: var(--secondary);
+}
+
+/* FictionList component */
+.fiction-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-gap: 1rem;
+  width: 80%;
+  margin: 0 auto;
+}
+
+/* Fiction component within the FictionList component */
+.grid-item {
+  flex-direction: column;
+  align-items: center;
+  background-color: rgba(var(--primary), .2);
+  color: var(--secondary);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.5);
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.grid-item:hover,
+.grid-item:focus {
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
+}
+
+.fiction {
+  display: flex;
+  flex-direction: column;
+}
+
+.fiction-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 1rem 0;
+}
+
+.author {
+  font-size: 1.25rem;
+  margin: 0.5rem 0;
+}
+
+.score {
+  font-size: 1.25rem;
+}
+
+/* Links within the Fiction component */
+.fiction-link {
+  color: var(--secondary);
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+}
+
+.fiction-link:hover,
+.fiction-link:focus {
+  color: var(--accent1);
+}
+.fiction-link:active {
+  color: var(--accent2);
+}
+
+.similar-button {
+  font-size: 1.25rem;
+  color: var(--secondary);
+  background-color: transparent;
+  border: 0.1rem solid var(--secondary);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  outline: none;
+  padding: 0.5rem 1rem;
+  margin: 0.5rem 0;
+}
+
+.similar-button:hover,
+.similar-button:focus {
+  background-color: var(--accent1);
+  color: #fff;
+}
+
+.similar-button:active {
+  background-color: var(--accent2);
+  color: #fff;
+}
+
+/* Homepage css */
+
+.homepage {
+  flex-direction: column;
+  align-items: center;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem 0;
+}
+
+.page-info {
+  font-size: 1.5rem;
+  margin: 0 1rem;
+  color: var(--secondary);
+}
+
+.prev-button,
+.next-button {
+  font-size: 1.25rem;
+  color: var(--secondary);
+  background-color: transparent;
+  border: 0.1rem solid var(--secondary);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  outline: none;
+  padding: 0.5rem 1rem;
+  margin: 0 0.5rem;
+}
+
+.prev-button:hover,
+.prev-button:focus,
+.next-button:hover,
+.next-button:focus {
+  background-color: var(--accent1);
+  color: #fff;
+}
+
+.prev-button:active,
+.next-button:active {
+  background-color: var(--accent2);
+  color: #fff;
+}
+
+
+.prev-button:disabled,
+.next-button:disabled {
+  color: #ccc;
+  border-color: #ccc;
+  cursor: default;
+  background-color: var(--primary);
 }
