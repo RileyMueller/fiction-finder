@@ -26,15 +26,15 @@ const SimilarList = () => {
 
 async function getSimiliar(embedding_id) {
     //console.log(embedding_id);
-    const res = await fetch(`/api/search?embedding_id=${embedding_id}`);
+    const res = await fetch(`/api/similiar?embedding_id=${embedding_id}`);
 
-    if (!res) throw new Error("Failed fetch to api/fictions");
+    if (!res) throw new Error("Failed fetch to api/similiar");
     console.log(res.statusText);
 
     const data = await res.json();
 
     if (data.error) {
-        console.log(`Error while using /api/search: ${data.error}`);
+        console.log(`Error while using /api/similiar: ${data.error}`);
         return [];
     }
 

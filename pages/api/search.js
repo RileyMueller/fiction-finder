@@ -1,103 +1,29 @@
+/* vercel next.js serverless function that searches for fictions based on title or author */
 import { supabase } from "../../utils/initSupabase";
 
-async function fetch_vector(id) {
-    const response = await fetch(
-        `https://${process.env.NEXT_PUBLIC_PINECONE_INDEX}-${process.env.NEXT_PUBLIC_PINECONE_PROJECT}.svc.${process.env.NEXT_PUBLIC_PINECONE_ENV}.pinecone.io/vectors/fetch?ids=${id}`,
-        {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                Accept: "application/json",
-                "Api-Key": process.env.NEXT_PUBLIC_PINECONE_API_KEY,
-            },
-        }
-    );
-    const data = await response.json();
+/**This function should search for a fiction based on title or author
+ */
+export default async function handler(req, res) {
+    const search_term = req.query.search;
+    const page = Number(req.query.page) || 1; // get the page number from the query string, or use 0 if not provided
     
-    return data['vectors'][id.toString()]['values'];
-}
+    if (!search_term) {
+        res.status(404).json({});
+        return;
+    }
 
-async function query_pinecone(vector) {
-    // Content-Length is the length of the body json (every character)
-    //const body = {"queries":[{"values":vector}],"topK":6,"includeMetadata":false,"includeValues":false}
-    const body = {"vector":vector,"topK":6,"includeMetadata":false,"includeValues":false};
+    const elementsPerPage = Number(process.env.ELEMENTS_PER_PAGE); // number of elements to retrieve per page
+    const offset = (page-1) * elementsPerPage; // calculate the index to start retrieving elements from
 
-    const body_str = JSON.stringify(body);
-
-    const url = `https://${process.env.NEXT_PUBLIC_PINECONE_INDEX}-${process.env.NEXT_PUBLIC_PINECONE_PROJECT}.svc.${process.env.NEXT_PUBLIC_PINECONE_ENV}.pinecone.io/query`
-     
-    const response = await fetch(
-        url,
-        {
-            method: "POST",
-            headers: {
-                "content-type": "application/json",
-                "accept": "application/json",
-                "Api-Key": process.env.NEXT_PUBLIC_PINECONE_API_KEY,
-                "Content-Length": body_str.length
-            },
-            body: body_str
-        }
-    );
-    
-    return await response.json();
-}
-
-async function join_fictions(embedding_id){
     const { data, error } = await supabase.from("fictions")
         .select('title, author, url, embedding_id')
-        .filter('embedding_id', 'in', embedding_id);
+        .range(offset, offset+elementsPerPage-1)
+        .eq('title', search_term);
+
     if (data) {
-        return data;
+        res.status(200).json(data);
     } else {
-        throw error;
+        res.status(500).json(error);
     }
 }
 
-export default async function handler(req, res) {
-    try {
-        let {embedding_id} = await req.query;
-
-        if (embedding_id === 'undefined'){
-            res.status(200).json({});
-            return;
-        }
-
-        if (!embedding_id && embedding_id != 0){
-            console.log('invalid embedding_id');
-            embedding_id = 0;
-        }
-
-
-        // first retrieve the vector for the embedding id we want
-        const vector = await fetch_vector(embedding_id);
-        
-        const json = await query_pinecone(vector);
-
-        var ids_string = "(";
-
-        // The first element is the vector we searches on, so remove it.
-        let matches = json.matches;
-        if (json.matches[0].score === 1)
-            matches = matches.slice(1);
-        else
-            matches = matches.slice(0,-1)
-
-        matches.forEach((match)=>{
-            ids_string += match.id + ",";
-        });
-
-        ids_string = ids_string.slice(0, -1) + ")";
-    
-        const joined = await join_fictions(ids_string);
-
-        for (let i = 0; i < joined.length; i++) {
-            joined[i]['score'] = matches[i].score;
-        }
-
-        res.status(200).json(joined);
-
-    } catch (err) {
-        console.log(err.message);
-    }
-}

@@ -2,6 +2,7 @@ import React from "react";
 import FictionList from "./FictionList";
 import { useState, useEffect } from "react";
 import Router from "next/router";
+import { debounce } from "lodash";
 
 /**
  * Displays the current page of stored fictions
@@ -22,7 +23,14 @@ const Homepage = ({ page, totalPages }) => {
 
     const PageDisplay = () => {
         return (
-            <div className="pagination">
+            <>
+                <div className="pagination">
+                    <input
+                        className="search-input"
+                        type="text"
+                        placeholder="Search..."
+                        onChange={(event) => debounce(() => search(event.target.value, setFictions), 1000 )}
+                    />
                     <p className="page-info">
                         Page {page} of {totalPages}
                     </p>
@@ -41,7 +49,8 @@ const Homepage = ({ page, totalPages }) => {
                         Next
                     </button>
                 </div>
-        )
+            </>
+        );
     }    
 
     return (
@@ -52,6 +61,19 @@ const Homepage = ({ page, totalPages }) => {
         </div>
     );
 };
+
+let old_search_term = '';
+async function search(search_term, setFictions){
+    if (!search_term || old_search_term === search_term) return;
+
+    const res = await fetch(`api/search?search_term=${search_term}`);
+
+    if (!res) console.log("Failed fetch to api/search");
+
+    const data = await res.json();
+
+    setFictions(data);
+}
 
 async function getFictions(page) {
     // params will contain the page number if provided in the URL
