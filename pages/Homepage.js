@@ -34,12 +34,18 @@ const Homepage = () => {
         
     }, [page, search]); //updates on page or search change
 
-    const Pageination = () => {
-        return (
+    return (
+        <div className="homepage">
+            <div className="search-container">
+                <TextForm handler={setSearch} label="Search for fiction"/>
+            </div>
             <div className="pagination">
-                <p className="page-info">
-                    Page {page} of {totalpages}
-                </p>
+            {page === null && <p className="page-info">
+                    Loading...
+                </p>}
+                {page != null && <p className="page-info">
+                    Page {Number(page)} of {Number(totalpages)}
+                </p>}
                 <button
                     className="prev-button"
                     disabled={page === 1}
@@ -55,27 +61,6 @@ const Homepage = () => {
                     Next
                 </button>
             </div>
-        );
-    };
-
-    return (
-        <div className="homepage">
-            <div className="search-container">
-                <TextForm handler={setSearch}/>
-                {/* <input type="text" className="search-input" ref={inputRef} />
-                <button
-                    className="search-button"
-                    onClick={() => {
-                        if (prevsearch != inputRef.current) {
-                            setPrevSearch(inputRef.current);
-                            setSearch(inputRef.current); // will proc useEffect
-                        }
-                    }}
-                >
-                    Search
-                </button> */}
-            </div>
-            <Pageination />
             <FictionList fictions={fictions} />
         </div>
     );
@@ -91,13 +76,13 @@ async function getPages(search) {
     const data = await res.json();
 
     // send the data as props to the component
-    return data;
+    return data.pages;
 }
 
 async function getFictions(page, search) {
     // params will contain the page number if provided in the URL
     if (!page) {
-        throw new Error(`getFictions helper needs a page number`);
+        return [];
     }
     // make a request to the fictions serverless function
     const params = new URLSearchParams();
@@ -110,7 +95,7 @@ async function getFictions(page, search) {
     const data = await res.json();
 
     // send the data as props to the component
-    return data;
+    return data.fictions;
 }
 
 export default Homepage;

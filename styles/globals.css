@@ -207,22 +207,39 @@ body {
   flex-direction: column;
   align-items: center;
 }
+
 .search-container {
   display: flex;
   align-items: center;
+  justify-content: center;
   margin: 1rem 0;
 }
 
-.search-input {
+.search-container > form {
+  display: flex;
+  align-items: center;
+}
+
+.search-container > form > label{
+  font-size: 1.25rem;
+  margin: 0 1rem;
+  display: flex;
+  flex-flow: row;
+  color: var(--secondary);
+  justify-content: center;
+  align-items: center;
+}
+
+.search-container > form > label> input[type="text"] {
   font-size: 1.25rem;
   border: 0.1rem solid var(--secondary);
   border-radius: 0.5rem;
   padding: 0.5rem 1rem;
-  margin: 0 0.5rem;
   outline: none;
+  margin: 0 1rem;
 }
 
-.search-button {
+.search-container > form > input[type="submit"] {
   font-size: 1.25rem;
   color: var(--secondary);
   background-color: transparent;
@@ -232,16 +249,15 @@ body {
   transition: background-color 0.2s ease-in-out;
   outline: none;
   padding: 0.5rem 1rem;
-  margin: 0 0.5rem;
 }
 
-.search-button:hover,
-.search-button:focus {
+.search-container > form > input[type="submit"]:hover,
+.search-container > form > input[type="submit"]:focus {
   background-color: var(--accent1);
   color: #fff;
 }
 
-.search-button:active {
+.search-container > form > input[type="submit"]:active {
   background-color: var(--accent2);
   color: #fff;
 }
