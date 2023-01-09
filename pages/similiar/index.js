@@ -17,23 +17,24 @@ const SimilarList = () => {
     return (
         <>
             <div>
+                <h1>Results similiar to</h1>
                 <FictionList fictions={similiar} />
             </div>
         </>
     );
 };
 
-async function getSimiliar(embedding_id) {
-    //console.log(embedding_id);
-    const res = await fetch(`/api/similiar?embedding_id=${embedding_id}`);
+async function getSimiliar(id) {
 
-    if (!res) throw new Error("Failed fetch to api/similiar");
+    const res = await fetch(`/api/search_with_fiction?id=${id}`);
+
+    if (!res) throw new Error("Failed fetch to api/search_with_fiction");
     console.log(res.statusText);
 
     const data = await res.json();
 
     if (data.error) {
-        console.log(`Error while using /api/similiar: ${data.error}`);
+        console.log(`Error while using /api/search_with_fiction: ${data.error}`);
         return [];
     }
 

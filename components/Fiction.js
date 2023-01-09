@@ -3,7 +3,7 @@ import Link from "next/link";
 import Router from "next/router";
 
 const Fiction = (props) => {
-    const { title, author, url, embedding_id, score } = props;    
+    const { title, author, url, id, score } = props;    
 
     return (
         <div className="fiction">
@@ -16,7 +16,7 @@ const Fiction = (props) => {
             {score && <p className="score">Score: {(Number(score) * 100).toFixed(2)}</p>}
             <button
                 className="similar-button"
-                onClick={() => Router.push(`/similiar?id=${embedding_id}`)}
+                onClick={() => Router.push(`/similiar?id=${id}`)}
               >
                 Find Similar
               </button>
