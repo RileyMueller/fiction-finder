@@ -220,7 +220,7 @@ body {
   align-items: center;
 }
 
-.search-container > form > label{
+.search-container > form > label {
   font-size: 1.25rem;
   margin: 0 1rem;
   display: flex;
@@ -228,9 +228,10 @@ body {
   color: var(--secondary);
   justify-content: center;
   align-items: center;
+  margin-right: -0.2rem;
 }
 
-.search-container > form > label> input[type="text"] {
+.search-container > form > input[type="text"] {
   font-size: 1.25rem;
   border: 0.1rem solid var(--secondary);
   border-radius: 0.5rem;

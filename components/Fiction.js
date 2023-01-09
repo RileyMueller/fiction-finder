@@ -14,14 +14,12 @@ const Fiction = (props) => {
             </h3>
             <p className="author">by {author}</p>
             {score && <p className="score">Score: {(Number(score) * 100).toFixed(2)}</p>}
-            {!score && (
-                <button
+            <button
                 className="similar-button"
                 onClick={() => Router.push(`/similiar?id=${embedding_id}`)}
               >
                 Find Similar
               </button>
-            )}
         </div>
     );
 };

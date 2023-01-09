@@ -1,8 +1,7 @@
 // id stands for embedding_id
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
-import Fiction from "../Fiction";
-import FictionList from "../FictionList";
+import FictionList from "../../components/FictionList";
 
 const SimilarList = () => {
     const router = useRouter();
